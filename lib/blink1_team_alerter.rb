@@ -9,16 +9,18 @@ module Blink1TeamAlerter
   def self.check_jira(username, password, host, project_key)
     jira_url = "https://#{username}:#{password}@#{host}/rest/api/2/search?"
     # latest 5 issues from a project with '0' priority
-    filter = "maxResults=5&fields=summary,status,resolution&jql=project+%3D+%22#{project_key}%22+AND+priority+%3D+%220%22+AND+status+in+(Open%2C+New)"
-
-    puts jira_url+filter
-    response = RestClient.get(jira_url+filter)
+    
+    result_filter = "maxResults=5&fields=summary,status,resolution&jql=project+%3D+%22#{project_key}%22+"
+    search_filter = "AND+priority+%3D+%220%22+AND+status+in+(Open%2C+New%2C+Planned)"
+    puts jira_url+result_filter+search_filter
+    response = RestClient.get(jira_url+result_filter+search_filter)
     if(response.code != 200)
       raise "Error with the http request!"
     end
 
     data = JSON.parse(response.body)
     if data['issues'].any?
+      puts "Prio 0 issue(s) found that is New, Open, or Planned"
       data['issues'].each do |issue|
         puts "Key: #{issue['key']}, Summary: #{issue['fields']['summary']}"
       end
@@ -38,7 +40,7 @@ module Blink1TeamAlerter
         blink1.set_rgb(255, 0, 0)
         puts "Blink1 Red"
       end
-    else
+    else      
       Blink1.open do |blink1|
         blink1.set_rgb(0, 255, 0)
       end
