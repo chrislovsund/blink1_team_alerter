@@ -23,6 +23,9 @@ Or install it yourself as:
     $ gem install blink1_team_alerter
 
 ## Prepare the Machine
+Install needed packages:
+
+```sudo dnf install -y libusb-devel```
 
 Clone the blink(1) code repo:
 
