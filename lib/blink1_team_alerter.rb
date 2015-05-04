@@ -12,7 +12,7 @@ module Blink1TeamAlerter
     
     result_filter = "maxResults=5&fields=summary,status,resolution&jql=project+%3D+%22#{project_key}%22+"
     search_filter = "AND+priority+%3D+%220%22+AND+status+in+(Open%2C+New%2C+Planned)"
-    puts jira_url+result_filter+search_filter
+    puts result_filter+search_filter
     response = RestClient.get(jira_url+result_filter+search_filter)
     if(response.code != 200)
       raise "Error with the http request!"
