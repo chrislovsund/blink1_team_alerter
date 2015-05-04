@@ -22,9 +22,25 @@ Or install it yourself as:
 
     $ gem install blink1_team_alerter
 
+## Prepare the Machine
+
+Clone the blink(1) code repo:
+
+```git clone git://github.com/todbot/blink1.git```
+
+Compile the blink(1) binaries:
+
+```cd blink1/commandline/ && make```
+
+Modify your udev rules so non-root users can access the device. You may need to replug the device after this step:
+
+```cd blink1/linux/ && sudo cp ./51-blink1.rules /etc/udev/rules.d/ && sudo udevadm control --reload-rules```
+
 ## Usage
 
-TODO: Write usage instructions here
+To check JIRA for prio 0 issues and turn on blink1 run:
+
+```bin/check_jira -u<USERNAME> -p<PASSWORD> -h<HOST> -k<PROJECT_KEY>```
 
 ## Development
 
