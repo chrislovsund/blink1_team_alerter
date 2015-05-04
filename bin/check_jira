@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "blink1_team_alerter"
+require 'optparse'
+
+options = {}
+options[:url] = ENV["URL"]
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: check_jira [options]"
+
+  opts.on("-uUSERNAME", "--username=USERNAME", "JIRA username") do |r|
+    options[:username] = r
+  end
+  opts.on("-pPASSWORD", "--password=PASSWORD", "JIRA password") do |r|
+    options[:password] = r
+  end
+  opts.on("-hHOST", "--host=HOST", "JIRA Host Name") do |r|
+    options[:host] = r
+  end
+  opts.on("-kPROJECTKEY", "--projectkey=PROJECTKEY", "JIRA project key") do |r|
+    options[:project_key] = r
+  end
+end.parse!
+
+
+Blink1TeamAlerter.check_jira options[:username], options[:password], options[:host], options[:project_key]
