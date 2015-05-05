@@ -10,17 +10,20 @@ options[:url] = ENV["URL"]
 optparse = OptionParser.new do |opts|
   opts.banner = "Usage: check_jira [options]"
 
-  opts.on("-uUSERNAME", "--username=USERNAME", "JIRA username") do |r|
+  opts.on("-u", "--username=<USERNAME>", "JIRA username") do |r|
     options[:username] = r
   end
-  opts.on("-pPASSWORD", "--password=PASSWORD", "JIRA password") do |r|
+  opts.on("-p", "--password=<PASSWORD>", "JIRA password") do |r|
     options[:password] = r
   end
-  opts.on("-hHOST", "--host=HOST", "JIRA Host Name") do |r|
+  opts.on("-h", "--host=<HOST>", "JIRA Host Name") do |r|
     options[:host] = r
   end
-  opts.on("-kPROJECTKEY", "--projectkey=PROJECTKEY", "JIRA project key") do |r|
+  opts.on("-k", "--project_key=<PROJECTKEY>", "JIRA project key") do |r|
     options[:project_key] = r
+  end
+  opts.on("-s", "--search_filter=<search_filter>", "JIRA search filter") do |r|
+    options[:search_filter] = r
   end
 end
 
@@ -39,4 +42,4 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
   exit
 end
 
-Blink1TeamAlerter.check_jira options[:username], options[:password], options[:host], options[:project_key]
+Blink1TeamAlerter.check_jira options[:username], options[:password], options[:host], options[:project_key], options[:search_filter]
