@@ -51,5 +51,13 @@ module Blink1TeamAlerter
     Blink1.open do |blink1|
       blink1.set_rgb(255, 0, 0)
       puts "Blink1 Red"
+    end
+  end
+ 
+  def self.blink1_green
+     Blink1.open do |blink1|
+       blink1.set_rgb(0, 255, 0)
+     end
+    puts "Blink1 Green"
   end
 end
