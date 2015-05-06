@@ -23,27 +23,9 @@ module Blink1TeamAlerter
       data['issues'].each do |issue|
         puts "Key: #{issue['key']}, Summary: #{issue['fields']['summary']}"
       end
-      Blink1.open do |blink1|
-        #      blink1.write_pattern_line(100, 255, 255, 255, 0)
-        #      blink1.write_pattern_line(100, 0,   255, 255, 1)
-        #      blink1.write_pattern_line(100, 255, 255, 0,   2)
-        #      blink1.write_pattern_line(100, 255, 0,   255, 3)
-        #      blink1.write_pattern_line(100, 255, 255, 255, 4)
-        #      blink1.write_pattern_line(100, 0,   255, 255, 5)
-        #      blink1.write_pattern_line(100, 255, 255, 0,   6)
-        #      blink1.write_pattern_line(100, 255, 0,   255, 7)
-        #      blink1.write_pattern_line(100, 255, 255, 255, 8)
-        #      blink1.write_pattern_line(100, 0,   255, 255, 9)
-        #      blink1.write_pattern_line(100, 255, 255, 0,   10)
-        #      blink1.play(0)
-        blink1.set_rgb(255, 0, 0)
-        puts "Blink1 Red"
-      end
-    else      
-      Blink1.open do |blink1|
-        blink1.set_rgb(0, 255, 0)
-      end
-      puts "Blink1 Green"
+      blink1_police
+    else
+      blink1_green
     end
   end
 
@@ -51,5 +33,23 @@ module Blink1TeamAlerter
     Blink1.open do |blink1|
       blink1.off
     end
+  end
+
+  def self.blink1_police
+    puts "Blink1 Police"
+    10.times do
+      system( "blink1-tool -l 2 --red " )
+      system( "blink1-tool -l 1 --blue" )
+      system( "sleep 0.5" )
+      system( "blink1-tool -l 1 --red" )
+      system( "blink1-tool -l 2 --blue" )
+      system( "sleep 0.5" )
+    end
+  end
+
+  def self.blink1_red
+    Blink1.open do |blink1|
+      blink1.set_rgb(255, 0, 0)
+      puts "Blink1 Red"
   end
 end
