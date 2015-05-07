@@ -1,14 +1,22 @@
 require 'rest-client'
 require 'json'
 
-module JiraClient
-  def self.has_prio_0_issues? (username, password, host, project_key, search_filter)
-    jira_url = "https://#{username}:#{password}@#{host}/rest/api/2/search?"
+class JiraClient
+  def initialize(username, password, host, project_key)
+    # Instance variables
+    @username=username
+    @password=password
+    @host = host
+    @project_key=project_key
+    @jira_url = "https://#{username}:#{password}@#{host}/rest/api/2/search?"
+    @result_filter = "maxResults=5&fields=summary,status,resolution&jql=project+%3D+%22#{project_key}%22+"
+  end
+
+  def has_new_prio_0_issues? (search_filter)
     # latest 5 issues from a project with '0' priority
 
-    result_filter = "maxResults=5&fields=summary,status,resolution&jql=project+%3D+%22#{project_key}%22+"
-    puts result_filter+search_filter
-    response = RestClient.get(jira_url+result_filter+search_filter)
+    puts "#{@result_filter}+#{search_filter}"
+    response = RestClient.get(@jira_url+@result_filter+search_filter)
     if(response.code != 200)
       raise "Error with the http request!"
     end

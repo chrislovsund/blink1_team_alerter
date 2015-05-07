@@ -4,7 +4,8 @@ require 'jira_client'
 
 module Blink1TeamAlerter
   def self.check_for_alerts(username, password, host, project_key, search_filter)
-    if JiraClient.has_prio_0_issues? username, password, host, project_key, search_filter
+    jira = JiraClient.new(username, password, host, project_key)
+    if jira.has_new_prio_0_issues? search_filter
       blink1_police
     else
       blink1_blue
