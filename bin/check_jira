@@ -42,4 +42,4 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
   exit
 end
 
-Blink1TeamAlerter.check_jira options[:username], options[:password], options[:host], options[:project_key], options[:search_filter]
+Blink1TeamAlerter.check_for_alerts options[:username], options[:password], options[:host], options[:project_key], options[:search_filter]
