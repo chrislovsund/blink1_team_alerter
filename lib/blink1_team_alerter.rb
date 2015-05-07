@@ -37,7 +37,7 @@ module Blink1TeamAlerter
 
   def self.blink1_police
     puts "Blink1 Police"
-    10.times do
+    30.times do
       system( "blink1-tool -l 2 --red " )
       system( "blink1-tool -l 1 --blue" )
       system( "sleep 0.5" )
