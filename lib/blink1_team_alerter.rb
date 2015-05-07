@@ -4,12 +4,11 @@ require 'json'
 require 'blink1'
 
 module Blink1TeamAlerter
-
   #  check_jira
   def self.check_jira(username, password, host, project_key, search_filter)
     jira_url = "https://#{username}:#{password}@#{host}/rest/api/2/search?"
     # latest 5 issues from a project with '0' priority
-    
+
     result_filter = "maxResults=5&fields=summary,status,resolution&jql=project+%3D+%22#{project_key}%22+"
     puts result_filter+search_filter
     response = RestClient.get(jira_url+result_filter+search_filter)
@@ -53,18 +52,18 @@ module Blink1TeamAlerter
       puts "Blink1 Red"
     end
   end
- 
+
   def self.blink1_green
-     Blink1.open do |blink1|
-       blink1.set_rgb(0, 255, 0)
-     end
+    Blink1.open do |blink1|
+      blink1.set_rgb(0, 255, 0)
+    end
     puts "Blink1 Green"
   end
-  
+
   def self.blink1_blue
     Blink1.open do |blink1|
       blink1.set_rgb(0, 0, 255)
     end
-  puts "Blink1 Blue"
+    puts "Blink1 Blue"
   end
 end
