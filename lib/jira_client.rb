@@ -31,4 +31,24 @@ class JiraClient
     end
     return false
   end
+
+  def has_ongoing_prio_0_issues? (search_filter)
+    # latest 5 issues from a project with '0' priority
+
+    puts "#{@result_filter}+#{search_filter}"
+    response = RestClient.get(@jira_url+@result_filter+search_filter)
+    if(response.code != 200)
+      raise "Error with the http request!"
+    end
+
+    data = JSON.parse(response.body)
+    if data['issues'].any?
+      puts "Prio '0' issue(s) found that is New"
+      data['issues'].each do |issue|
+        puts "Key: #{issue['key']}, Summary: #{issue['fields']['summary']}"
+      end
+      return true
+    end
+    return false
+  end
 end

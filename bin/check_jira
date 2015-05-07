@@ -10,26 +10,29 @@ options[:url] = ENV["URL"]
 optparse = OptionParser.new do |opts|
   opts.banner = "Usage: check_jira [options]"
 
-  opts.on("-u", "--username=<USERNAME>", "JIRA username") do |r|
+  opts.on("-u", "--username=<username>", "JIRA username") do |r|
     options[:username] = r
   end
-  opts.on("-p", "--password=<PASSWORD>", "JIRA password") do |r|
+  opts.on("-p", "--password=<password>", "JIRA password") do |r|
     options[:password] = r
   end
-  opts.on("-h", "--host=<HOST>", "JIRA Host Name") do |r|
+  opts.on("-h", "--host=<host>", "JIRA Host Name") do |r|
     options[:host] = r
   end
-  opts.on("-k", "--project_key=<PROJECTKEY>", "JIRA project key") do |r|
+  opts.on("-k", "--project_key=<project_key>", "JIRA project key") do |r|
     options[:project_key] = r
   end
-  opts.on("-s", "--search_filter=<search_filter>", "JIRA search filter") do |r|
-    options[:search_filter] = r
+  opts.on("-a", "--alert_filter=<alert_filter>", "JIRA filter that will show as an alert") do |r|
+    options[:alert_filter] = r
+  end
+  opts.on("-w", "--warn_filter=<warn_filter>", "JIRA filter that will show as a warning") do |r|
+    options[:warn_filter] = r
   end
 end
 
 begin
   optparse.parse!
-  mandatory = [:username, :password, :host, :project_key]
+  mandatory = [:username, :password, :host, :project_key, :alert_filter, :warn_filter]
   missing = mandatory.select{ |param| options[param].nil? }
   unless missing.empty?
     puts "Missing options: #{missing.join(', ')}"
@@ -42,4 +45,4 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
   exit
 end
 
-Blink1TeamAlerter.check_for_alerts options[:username], options[:password], options[:host], options[:project_key], options[:search_filter]
+Blink1TeamAlerter.check_for_alerts options[:username], options[:password], options[:host], options[:project_key], options[:alert_filter], options[:warn_filter]
