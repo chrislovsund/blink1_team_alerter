@@ -3,6 +3,8 @@
 require "bundler/setup"
 require "blink1_team_alerter"
 require 'optparse'
+require 'gocd_client'
+require 'jira_client'
 
 options = {}
 options[:url] = ENV["URL"]
@@ -10,29 +12,46 @@ options[:url] = ENV["URL"]
 optparse = OptionParser.new do |opts|
   opts.banner = "Usage: check_jira [options]"
 
-  opts.on("-u", "--username=<username>", "JIRA username") do |r|
+  opts.on("-u", "--username <username>", "JIRA username") do |r|
     options[:username] = r
   end
-  opts.on("-p", "--password=<password>", "JIRA password") do |r|
+  opts.on("-p", "--password <password>", "JIRA password") do |r|
     options[:password] = r
   end
-  opts.on("-h", "--host=<host>", "JIRA Host Name") do |r|
+  opts.on("-h", "--host <host>", "JIRA Host Name") do |r|
     options[:host] = r
   end
-  opts.on("-k", "--project_key=<project_key>", "JIRA project key") do |r|
+  opts.on("-k", "--project_key <project_key>", "JIRA project key") do |r|
     options[:project_key] = r
   end
-  opts.on("-a", "--alert_filter=<alert_filter>", "JIRA filter that will show as an alert") do |r|
+  opts.on("-a", "--alert_filter <alert_filter>", "JIRA filter that will show as an alert") do |r|
     options[:alert_filter] = r
   end
-  opts.on("-w", "--warn_filter=<warn_filter>", "JIRA filter that will show as a warning") do |r|
+  opts.on("-w", "--warn_filter <warn_filter>", "JIRA filter that will show as a warning") do |r|
     options[:warn_filter] = r
+  end
+  opts.on("--gocd_url <gocd_url>", "GoCD URL") do |r|
+    options[:gocd_url] = r
+  end
+  opts.on("--gocd_user <gocd_user>", "GoCD Username") do |r|
+    options[:gocd_user] = r
+  end
+  opts.on("--gocd_pass <gocd_pass>", "GoCD Password") do |r|
+    options[:gocd_pass] = r
+  end
+  opts.on("--pipelines x,y,z", Array, "List of pipelines to check for failing stages") do |r|
+    options[:pipelines] = r
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
   end
 end
 
 begin
   optparse.parse!
-  mandatory = [:username, :password, :host, :project_key, :alert_filter, :warn_filter]
+  mandatory = [:username, :password, :host, :project_key, :alert_filter]
   missing = mandatory.select{ |param| options[param].nil? }
   unless missing.empty?
     puts "Missing options: #{missing.join(', ')}"
@@ -45,4 +64,6 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
   exit
 end
 
-Blink1TeamAlerter.check_for_alerts options[:username], options[:password], options[:host], options[:project_key], options[:alert_filter], options[:warn_filter]
+gocd = GocdClient.new options[:gocd_url], options[:gocd_user], options[:gocd_pass], options[:pipelines]
+jira = JiraClient.new(options[:username], options[:password], options[:host], options[:project_key])
+Blink1TeamAlerter.check_for_alerts jira, options[:alert_filter], options[:warn_filter], gocd

@@ -1,14 +1,17 @@
 require "blink1_team_alerter/version"
 require 'blink1'
+require 'gocd_client'
 require 'jira_client'
 
 module Blink1TeamAlerter
-  def self.check_for_alerts(username, password, host, project_key, alert_filter, warn_filter)
-    jira = JiraClient.new(username, password, host, project_key)
+  def self.check_for_alerts(jira, alert_filter, warn_filter, gocd)
+
     if jira.has_new_prio_0_issues? alert_filter
       blink1_police
     elsif jira.has_ongoing_prio_0_issues? warn_filter
       blink1_yellow
+    elsif gocd.has_failing_projects?
+      blink1_red
     else
       blink1_blue
     end
