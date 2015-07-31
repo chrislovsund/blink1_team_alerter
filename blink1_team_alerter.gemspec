@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  spec.add_runtime_dependency "activesupport", "~> 4.2"
+  spec.add_runtime_dependency "activesupport"
   spec.add_runtime_dependency "rb-blink1"
   spec.add_runtime_dependency "rest-client"
   spec.add_runtime_dependency "json"
