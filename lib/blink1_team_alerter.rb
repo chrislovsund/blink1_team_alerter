@@ -48,6 +48,14 @@ module Blink1TeamAlerter
       puts "Blink1 Yellow"
     end
   end
+
+  def self.blink1_orange
+    Blink1.open do |blink1|
+      blink1.set_rgb(255, 150, 0)
+      puts "Blink1 Orange"
+    end
+  end
+
   def self.blink1_green
     Blink1.open do |blink1|
       blink1.set_rgb(0, 255, 0)
