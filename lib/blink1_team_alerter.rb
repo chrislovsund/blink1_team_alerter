@@ -11,7 +11,7 @@ module Blink1TeamAlerter
     elsif jira.has_ongoing_prio_0_issues? warn_filter
       blink1_yellow
     elsif gocd.has_failing_projects?
-      blink1_red
+      blink1_purple
     else
       blink1_blue
     end
@@ -53,6 +53,13 @@ module Blink1TeamAlerter
     Blink1.open do |blink1|
       blink1.set_rgb(255, 150, 0)
       puts "Blink1 Orange"
+    end
+  end
+
+  def self.blink1_purple
+    Blink1.open do |blink1|
+      blink1.set_rgb(128, 0, 128)
+      puts "Blink1 Purple"
     end
   end
 
