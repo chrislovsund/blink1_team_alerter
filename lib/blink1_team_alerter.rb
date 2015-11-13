@@ -38,7 +38,7 @@ module Blink1TeamAlerter
     end
   end
 
-  def create_html_status_page(color)
+  def self.create_html_status_page(color)
     status_file = File.new('status.html', 'w+')
     status_file.puts "<HTML><BODY BGCOLOR='#{color}'></BODY></HTML>"
     status_file.close
