@@ -15,7 +15,7 @@ class GocdClient
     pp @pipeline_names
     failing = false
 
-    log '<HTML><BODY>'
+    log('<HTML><BODY>')
     @pipeline_names.each do |pipe_name|
       if @user_pass
         hash = JSON.parse(`curl -u #{@user_pass} #{@gocd_addr}/go/api/pipelines/#{pipe_name}/history 2>/dev/null`)
@@ -24,19 +24,19 @@ class GocdClient
       end
 
       event = hash['pipelines'].first
-      log "#{pipe_name} - #{event['label']}"
+      log("#{pipe_name} - #{event['label']}")
 
       event['stages'].each do |stage|
-        log "Stage #{stage['name']} = #{stage['result']}"
+        log("Stage #{stage['name']} = #{stage['result']}")
         if stage['result'] == 'Failed'
-          log '<b>Failed</b>'
+          log('<b>Failed</b>')
           failing = true
         else
-          log 'OK'
+          log('OK')
         end
       end
     end
-    log '</BODY></HTML>'
+    log('</BODY></HTML>')
     failing
   end
 
