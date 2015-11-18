@@ -30,7 +30,9 @@ class GocdClient
         puts "Stage #{stage['name']} = #{stage['result']}"
         if stage['result'] == 'Failed'
           puts 'FAIL'
-          update_status_file(event)
+          file = File.open("#{@failure_file}", 'a')
+          file.write(event)
+          file.close
           failing = true
         else
           puts 'OK'
@@ -38,11 +40,5 @@ class GocdClient
       end
     end
     failing
-  end
-
-  def self.update_status_file(event)
-    file = File.open("#{@failure_file}", 'a')
-    file.write(event)
-    file.close
   end
 end
