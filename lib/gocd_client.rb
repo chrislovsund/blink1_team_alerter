@@ -31,7 +31,7 @@ class GocdClient
         if stage['result'] == 'Failed'
           puts 'FAIL'
           file = File.open("#{@failure_file}", 'a')
-          file.write(event)
+          file.pretty_generate(event)
           file.close
           failing = true
         else
