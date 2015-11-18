@@ -40,7 +40,7 @@ class GocdClient
     failing
   end
 
-  def self.log(row)
+  def log(row)
     file = File.open("#{@failure_file}", 'a')
     file.puts "'#{row}'"
     file.close
