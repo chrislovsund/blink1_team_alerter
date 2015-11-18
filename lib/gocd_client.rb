@@ -15,7 +15,7 @@ class GocdClient
     pp @pipeline_names
     failing = false
 
-    FileUtils.touch(@failure_file)
+    log '<HTML><BODY>'
     @pipeline_names.each do |pipe_name|
       if @user_pass
         hash = JSON.parse(`curl -u #{@user_pass} #{@gocd_addr}/go/api/pipelines/#{pipe_name}/history 2>/dev/null`)
@@ -24,21 +24,25 @@ class GocdClient
       end
 
       event = hash['pipelines'].first
-      puts "#{pipe_name} - #{event['label']}"
+      log "#{pipe_name} - #{event['label']}"
 
       event['stages'].each do |stage|
-        puts "Stage #{stage['name']} = #{stage['result']}"
+        log "Stage #{stage['name']} = #{stage['result']}"
         if stage['result'] == 'Failed'
-          puts 'FAIL'
-          file = File.open("#{@failure_file}", 'a')
-          file.write(JSON.pretty_generate(event))
-          file.close
+          log '<b>Failed</b>'
           failing = true
         else
-          puts 'OK'
+          log 'OK'
         end
       end
     end
+    log '</BODY></HTML>'
     failing
+  end
+
+  def self.log(row)
+    file = File.open("#{@failure_file}", 'a')
+    file.puts "'#{row}'"
+    file.close
   end
 end
