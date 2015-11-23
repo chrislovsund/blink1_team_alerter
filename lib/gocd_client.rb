@@ -24,14 +24,11 @@ class GocdClient
       end
 
       event = hash['pipelines'].first
-      log("#{pipe_name} - #{event['label']}")
 
       event['stages'].each do |stage|
-        log("Stage #{stage['name']} = #{stage['result']}")
-        if stage['result'] == 'Failed'
-          log('<b>Failed</b>')
-          failing = true
-        end
+        next unless stage['result'] == 'Failed'
+        log("#{pipe_name} - #{event['label']} Stage #{stage['name']} = #{stage['result']}")
+        failing = true
       end
     end
     log('</BODY></HTML>')
