@@ -31,8 +31,6 @@ class GocdClient
         if stage['result'] == 'Failed'
           log('<b>Failed</b>')
           failing = true
-        else
-          log('OK')
         end
       end
     end
@@ -42,7 +40,7 @@ class GocdClient
 
   def log(row)
     file = File.open("#{@failure_file}", 'a')
-    file.puts "'#{row}'"
+    file.puts "#{row}<br>"
     file.close
   end
 end
