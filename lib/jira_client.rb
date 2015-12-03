@@ -27,7 +27,7 @@ class JiraClient
       data['issues'].each do |issue|
         puts "Key: #{issue['key']}, Summary: #{issue['fields']['summary']}"
         link_url = "https://#{@host}/browse/#{issue['key']}"
-        link_text += "#{issue['key']}: #{issue['fields']['summary']}"
+        link_text = "#{issue['key']}: #{issue['fields']['summary']}"
         status_html += "<a href=\"#{link_url}\" target=\"_blank\">#{link_text}</a>\n"
       end
       return status_html
