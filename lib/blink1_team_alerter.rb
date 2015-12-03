@@ -5,23 +5,25 @@ require 'jira_client'
 
 module Blink1TeamAlerter
   def self.check_for_alerts(jira, alert_filter, warn_filter, gocd)
-    if jira.new_prio_0_issues? alert_filter
+    message = jira.issues? alert_filter
+    unless message.empty?
       blink1_police
       create_html_status_page('red', 'Found unassigned blocker JIRA issue')
       return
     end
-    if jira.ongoing_prio_0_issues? warn_filter
+    message = jira.issues? warn_filter
+    unless message.empty?
       blink1_yellow
       create_html_status_page('yellow', 'Found assigned blocker JIRA issue')
       return
     end
     message = gocd.failing_projects?
-    if !message.empty?
-      blink1_purple
-      create_html_status_page('purple', message)
-    else
+    if message.empty?
       blink1_blue
       create_html_status_page('blue', 'Everything is dandy')
+    else
+      blink1_purple
+      create_html_status_page('purple', message)
     end
   end
 

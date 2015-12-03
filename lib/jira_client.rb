@@ -12,39 +12,26 @@ class JiraClient
     @result_filter = "maxResults=5&fields=summary,status,resolution&jql=project+%3D+%22#{project_key}%22+"
   end
 
-  def new_prio_0_issues?(search_filter)
+  def issues?(search_filter)
     # latest 5 issues from a project with '0' priority
 
     puts "#{@result_filter}+#{search_filter}"
     response = RestClient.get(@jira_url + @result_filter + search_filter)
     fail 'Error with the http request!' if (response.code != 200)
 
-    data = JSON.parse(response.body)
-    if data['issues'].any?
-      puts "Prio '0' issue(s) found that is New"
-      data['issues'].each do |issue|
-        puts "Key: #{issue['key']}, Summary: #{issue['fields']['summary']}"
-      end
-      return true
-    end
-    false
-  end
-
-  def ongoing_prio_0_issues?(search_filter)
-    # latest 5 issues from a project with '0' priority
-
-    puts "#{@result_filter}+#{search_filter}"
-    response = RestClient.get(@jira_url + @result_filter + search_filter)
-    fail 'Error with the http request!' if (response.code != 200)
+    status_html = ''
 
     data = JSON.parse(response.body)
     if data['issues'].any?
-      puts "Prio '0' issue(s) found that is New"
+      puts 'Issue(s) found'
       data['issues'].each do |issue|
         puts "Key: #{issue['key']}, Summary: #{issue['fields']['summary']}"
+        link_url = "https://#{@host}/browse/#{issue['key']}"
+        link_text += "#{issue['key']}: #{issue['fields']['summary']}"
+        status_html += "<a href=\"#{link_url}\" target=\"_blank\">#{link_text}</a>\n"
       end
-      return true
+      return status_html
     end
-    false
+    status_html
   end
 end
