@@ -8,14 +8,12 @@ class GocdClient
     @gocd_addr = gocd_addr
     @user_pass = "'#{username}:#{password}'"
     @pipeline_names = projects
-    @failure_file = 'failing_pipelines.html'
   end
 
   def failing_projects?
     pp @pipeline_names
-    failing = false
+    status_html = ''
 
-    log('<HTML><BODY>')
     @pipeline_names.each do |pipe_name|
       if @user_pass
         hash = JSON.parse(`curl -u #{@user_pass} #{@gocd_addr}/go/api/pipelines/#{pipe_name}/history 2>/dev/null`)
@@ -29,17 +27,9 @@ class GocdClient
         next unless stage['result'] == 'Failed'
         stage_url = "#{@gocd_addr}/go/pipelines/#{pipe_name}/#{event['counter']}/#{stage['name']}/#{stage['counter']}"
         stage_display_name = "#{pipe_name} - #{event['label']} Stage #{stage['name']} = #{stage['result']}"
-        log("<a href=\"#{stage_url}\" target=\"_blank\">#{stage_display_name}</a>")
-        failing = true
+        status_html += "<a href=\"#{stage_url}\" target=\"_blank\">#{stage_display_name}</a>\n"
       end
     end
-    log('</BODY></HTML>')
-    failing
-  end
-
-  def log(row)
-    file = File.open("#{@failure_file}", 'a')
-    file.puts "#{row}<br>"
-    file.close
+    status_html
   end
 end
