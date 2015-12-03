@@ -8,13 +8,13 @@ module Blink1TeamAlerter
     message = jira.issues? alert_filter
     unless message.empty?
       blink1_police
-      create_html_status_page('red', 'Found unassigned blocker JIRA issue')
+      create_html_status_page('red', message)
       return
     end
     message = jira.issues? warn_filter
     unless message.empty?
       blink1_yellow
-      create_html_status_page('yellow', 'Found assigned blocker JIRA issue')
+      create_html_status_page('yellow', message)
       return
     end
     message = gocd.failing_projects?
