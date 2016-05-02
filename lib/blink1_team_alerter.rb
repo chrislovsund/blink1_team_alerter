@@ -5,7 +5,12 @@ require 'jira_client'
 
 module Blink1TeamAlerter
   def self.check_for_alerts(jira, alert_filter, warn_filter, gocd)
-    message = jira.issues? alert_filter
+    begin
+      message = jira.issues? alert_filter
+    rescue StandardError => msg
+      blink1_red
+      create_html_status_page('red', msg)
+    end
     unless message.empty?
       blink1_police
       create_html_status_page('red', message)
