@@ -10,6 +10,7 @@ module Blink1TeamAlerter
     rescue StandardError => msg
       blink1_red
       create_html_status_page('red', msg)
+      return
     end
     unless message.empty?
       blink1_police
