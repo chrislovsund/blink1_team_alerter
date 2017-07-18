@@ -25,7 +25,7 @@ class GocdClient
 
       event['stages'].each do |stage|
         next unless stage['result'] == 'Failed'
-        stage_url = "#{@gocd_addr}/go/pipelines/#{pipe_name}/#{event['counter']}/#{stage['name']}/#{stage['counter']}"
+        stage_url = "#{@gocd_addr}/go/pipelines/#{pipe_name}/#{event['counter']}/#{stage['name']}/#{stage['counter']}/"
         stage_display_name = "#{pipe_name} - #{event['label']} Stage #{stage['name']} = #{stage['result']}"
         status_html += "<a href=\"#{stage_url}\" target=\"_blank\" style=\"color:white\" >#{stage_display_name}</a><br>\n"
       end
